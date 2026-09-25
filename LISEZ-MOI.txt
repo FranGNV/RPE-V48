@@ -1,0 +1,438 @@
+RPE Viewer v48
+=============
+
+Nouveautés :
+- deux boutons séparés pour charger le TXT et le DSC ;
+- vérification automatique que les deux fichiers ont le même nom de base ;
+- si les noms diffèrent, le programme demande confirmation ;
+- réglage de la zone affichée par deux curseurs : champ min et champ max ;
+- mise à jour directe du spectre pendant le déplacement des curseurs ;
+- nombre de points toujours variable et contrôlé avec XPTS du DSC.
+
+Construction :
+1. Installer_dependances.bat
+2. Construire.EXE.bat
+3. Lancer RPE_Viewer.exe
+
+Nouveautés v4 :
+- bouton « Réinitialiser toutes les données » sans fermer le logiciel ;
+- bouton bascule « Afficher/Masquer la croix de centrage » ;
+- la croix rouge est placée exactement au centre de la fenêtre graphique visible ;
+- si les curseurs de champ sont déplacés, la croix se recentre automatiquement.
+
+Nouveautés v5 :
+- le repère de centrage est maintenant une vraie croix :
+  ligne verticale rouge sur toute la hauteur du graphe,
+  ligne horizontale rouge sur toute sa largeur ;
+- activation simultanée d'un quadrillage pour faciliter le centrage ;
+- un second clic masque les deux lignes rouges et le quadrillage ;
+- les repères restent centrés sur la fenêtre actuellement visible.
+
+Correctif v8 :
+- correction du bug V6/V7 qui supprimait la création de la zone graphique ;
+- la V8 repart de la V5 stable ;
+- graphe, curseurs, paramètres DSC et barre Matplotlib sont conservés ;
+- blocs Spectre simple et Multi spectres ajoutés sans couper _build_ui ;
+- chargement simple TXT + DSC fonctionnel ;
+- affichage automatique dès que les deux fichiers sont disponibles ;
+- bouton Afficher le spectre conservé.
+
+Nouveautés v9 :
+- panneau gauche déroulant ;
+- suppression des noms de fichiers sous les boutons multi ;
+- fenêtre Analyse multi spectre avec colonnes TXT / DSC / Statut / Temps (min) ;
+- pastille verte si TXT et DSC ont le même nom ;
+- pastille orange si une correspondance manque ;
+- saisie manuelle du temps en minutes ;
+- vérification des associations et des temps.
+
+Nouveautés v10 :
+- bouton « Actualiser / trier par temps » dans Analyse multi spectre ;
+- les temps saisis sont relus puis les lignes sont classées par temps croissant ;
+- les temps vides sont placés en fin de tableau ;
+- le nom du fichier TXT est cliquable ;
+- un clic ouvre le spectre correspondant dans une nouvelle fenêtre avec barre Matplotlib ;
+- affichage du temps et de quelques paramètres DSC dans la fenêtre individuelle.
+
+Nouveautés v11 :
+- colonnes de l'analyse multi à largeur fixe ;
+- ajout d'une barre de défilement horizontale pour éviter tout décalage lors du redimensionnement ;
+- nouvelle colonne « Fenêtre » ;
+- clic sur « Définir » ouvre un spectre de référence avec deux curseurs min/max ;
+- validation d'une fenêtre unique appliquée à tous les spectres ;
+- la même fenêtre est affichée dans chaque ligne ;
+- les spectres ouverts individuellement utilisent aussi cette fenêtre si elle est définie.
+
+Nouveautés v12 :
+- double intégration du signal RPE uniquement dans la fenêtre d'analyse commune ;
+- correction de baseline linéaire du signal dérivé entre les deux extrémités de la fenêtre ;
+- première intégration cumulative avec correction de dérive linéaire ;
+- seconde intégration par méthode trapézoïdale ;
+- nouvelle colonne « Double intégrale » dans le tableau multi ;
+- calcul automatique après définition/modification de la fenêtre ;
+- bouton « Calculer les doubles intégrales » ;
+- clic sur la valeur de double intégrale pour ouvrir le détail :
+  signal brut, signal corrigé, première intégrale et seconde intégrale.
+
+Correctif v13 :
+- remplacement de np.trapz par np.trapezoid pour compatibilité avec les versions récentes de NumPy ;
+- aucun changement du calcul de double intégration lui-même.
+
+Nouveautés v14 :
+- bouton unique « Cinétique normalisée + fit exponentiel » ;
+- relit les temps saisis et recalcule les doubles intégrales dans la fenêtre commune ;
+- tri automatique des points par temps croissant ;
+- normalisation du premier point temporel à 100 % ;
+- utilisation de la valeur absolue de la double intégrale pour l'intensité relative ;
+- tracé Double intégrale normalisée (%) vs Temps (min) ;
+- fit mono-exponentiel avec plateau : y = C + A exp(-k t) ;
+- affichage automatique de A, C, k, t1/2 et R² ;
+- barre Matplotlib conservée dans la fenêtre de cinétique.
+
+Nouveautés v15 :
+- curseur d'extrapolation du fit exponentiel au-delà du dernier point mesuré ;
+- ligne verticale repérant le dernier point expérimental ;
+- nouveau bouton « ln(DI/DI0) + fit linéaire » ;
+- calcul de ln(DI/DI0), avec DI0 = première double intégrale ;
+- fit linéaire et affichage de la pente, k = -pente, t1/2 et R² ;
+- test direct de la compatibilité avec une cinétique d'ordre 1.
+
+Nouveautés v16 :
+- bouton « Exporter les données (TXT / Excel) » dans la cinétique exponentielle ;
+- même bouton dans la fenêtre ln(DI/DI0) + fit linéaire ;
+- TXT tabulé adapté à l'import dans Origin ;
+- XLSX créé directement sans dépendance Python supplémentaire ;
+- export des données expérimentales, normalisées/transformées et des courbes de fit ;
+- export des paramètres k, t1/2, R2 et autres paramètres du modèle ;
+- pour l'exponentielle, la courbe exportée suit la limite d'extrapolation choisie avec le curseur.
+
+Correctif v17 :
+- les boutons d'export existaient mais étaient placés sous le graphe et pouvaient sortir de la zone visible ;
+- bouton Exporter déplacé en haut de la fenêtre Cinétique RPE normalisée ;
+- même correction dans la fenêtre ln(DI/DI0) + fit linéaire ;
+- aucune modification des calculs ou du contenu des exports.
+
+Nouveautés v18 :
+- cadre « Visualiser » avec import simple, fenêtre du spectre et redimensionnement regroupés ;
+- un seul bouton « Redimensionner » ouvre les dimensions dans une petite boîte de dialogue ;
+- nouveau cadre « Suivi automatique » ;
+- import d'un fichier de suivi TXT + un DSC unique ;
+- détection automatique des scans et de leurs temps à partir de la colonne Time [s] ;
+- aucun nombre de points fixe imposé ;
+- fenêtre « Analyse suivi automatique » avec Spectre / Temps / Fenêtre / Double intégrale ;
+- même fenêtre d'analyse appliquée à tous les scans ;
+- double intégration, fit exponentiel, extrapolation, ln(DI/DI0), fit linéaire ;
+- exports TXT / Excel dans les deux fenêtres de fit.
+
+Nouveautés v19 :
+- suivi automatique : nouvelle colonne « Inclure » avant la double intégrale ;
+- clic sur le statut pour inclure/exclure un spectre ;
+- vert = Inclus, rouge = Exclu ;
+- boutons « Tout cocher » et « Tout décocher » ;
+- seuls les spectres cochés sont utilisés pour les cinétiques et les fits ;
+- une double intégrale strictement égale à 0 est toujours ignorée dans les calculs cinétiques,
+  même si le spectre reste coché ;
+- les doubles intégrales nulles sont indiquées « 0 (ignoré) » dans le tableau.
+
+Nouveautés v20 :
+- Analyse multi spectres : colonne « Inclure » identique au suivi automatique ;
+- vert = Inclus, rouge = Exclu ;
+- boutons « Tout cocher » et « Tout décocher » ;
+- seuls les spectres cochés et à double intégrale non nulle participent aux fits ;
+- Visualiser : paramètres DSC utiles affichés directement sur le graphe
+  (points, fréquence micro-onde, scans, modulation, gain, atténuation/puissance et balayage).
+
+Nouveautés v21 :
+- fit exponentiel multi spectres : option « Imposer le plateau à 0 (C = 0) » ;
+- même option ajoutée au suivi automatique pour garder les deux modes cohérents ;
+- bouton « ln(DI/DI0) + fit linéaire » remplacé par « Détermination de l'ordre » ;
+- ordre 1 affiché par défaut ;
+- choix interactif Ordre 0 / Ordre 1 / Ordre 2 ;
+- transformations utilisées :
+  Ordre 0 : DI/DI0 vs temps ;
+  Ordre 1 : ln(DI/DI0) vs temps ;
+  Ordre 2 : 1/(DI/DI0) vs temps ;
+- fit linéaire, pente, k apparent et R2 recalculés immédiatement quand l'ordre change ;
+- export TXT / Excel adapté à l'ordre sélectionné.
+
+Nouveautés v22 :
+- Détermination de l'ordre enrichie dans Multi spectres ET Suivi automatique ;
+- comparaison automatique des modèles directs d'ordre 0, 1 et 2 ;
+- tableau R² direct / RMSE / AICc / ΔAICc ;
+- conclusion automatique : modèle favorisé ou modèles non discriminables ;
+- ΔAICc < 2 : modèles considérés non discriminables ;
+- la linéarisation ordre 0/1/2 reste sélectionnable ;
+- affichage conjoint des indicateurs du fit linéarisé et du fit direct ;
+- export enrichi avec comparaison des trois modèles et résidus linéarisés.
+
+Nouveautés v23 :
+- navigation principale par onglets ;
+- onglet Visualiser ;
+- onglet Multi-spectres ;
+- onglet Suivi cinétique ;
+- chaque onglet regroupe ses fonctions principales ;
+- suppression complète des repères de centrage.
+
+Nouveautés v24 :
+- Multi-spectres : temps récupérés automatiquement depuis DATE + TIME de chaque DSC ;
+- plus de saisie manuelle des temps ;
+- premier DSC chronologique automatiquement fixé à t = 0 min ;
+- temps suivants calculés par différence d'horodatage ;
+- tri chronologique automatique ;
+- colonne « Temps DSC » affichant temps écoulé + heure absolue ;
+- bouton « Actualiser depuis les DSC » ;
+- avertissement si DATE/TIME manque dans un DSC.
+
+Nouveautés v25 :
+- Multi-spectres utilise désormais DTA + DSC au lieu de TXT + DSC ;
+- DTA = signal brut de référence ;
+- DSC = décodage du DTA, axe de champ, paramètres et horodatage ;
+- le TXT n'est plus nécessaire dans Multi-spectres ;
+- validation automatique des couples DTA/DSC ;
+- affichage individuel, fenêtre d'analyse et double intégration calculés directement depuis DTA ;
+- Visualiser et Suivi cinétique restent inchangés.
+
+Nouveautés v26 :
+- Suivi cinétique passe de TXT + DSC à DTA + DSC + YGF ;
+- le DTA contient directement tous les spectres bruts du suivi ;
+- le YGF fournit automatiquement le temps de chaque spectre ;
+- prise en charge de YTYP=IGD et YFMT du format Bruker BES3T ;
+- auto-détection du DSC et du YGF portant le même nom que le DTA ;
+- XPTS × YPTS contrôlés par rapport à la taille du DTA ;
+- le QValue du DSC est affiché dans la fenêtre de suivi cinétique ;
+- aucun facteur Q n'est appliqué automatiquement aux intensités ;
+- le TXT exporté n'est plus nécessaire pour le suivi cinétique.
+
+Nouveautés v27 :
+- bouton « Superposer les spectres » dans Analyse multi-spectres ;
+- même bouton dans Analyse suivi cinétique ;
+- fenêtre dédiée de superposition des spectres ;
+- chaque courbe est paramétrable individuellement :
+  affichage/masquage, couleur, style de trait et épaisseur ;
+- styles disponibles : trait plein, tirets, pointillés, tiret-point ;
+- couleurs modifiables avec un sélecteur graphique ;
+- commandes Tout afficher / Tout masquer ;
+- légende activable/désactivable ;
+- possibilité de limiter l'affichage à la fenêtre d'analyse commune ;
+- les spectres exclus de l'analyse sont initialement masqués dans la superposition,
+  mais peuvent être réaffichés manuellement.
+
+Nouveautés v28 :
+- superposition : choix automatique d'un dégradé global ;
+- palettes disponibles : Viridis, Plasma, Inferno, Magma, Cividis, Turbo,
+  Coolwarm, Blues, Greens, Reds, Purples et gris ;
+- possibilité d'inverser le dégradé ;
+- dégradé personnalisé entre une couleur de départ et une couleur d'arrivée ;
+- un clic applique le dégradé à toutes les courbes ;
+- chaque couleur reste ensuite modifiable individuellement ;
+- chaque entrée de légende peut être renommée manuellement ;
+- titre de légende personnalisable ;
+- position de la légende personnalisable.
+
+Nouveautés v29 :
+- la fenêtre de superposition devient un éditeur complet de figure ;
+- titre, labels X/Y et police entièrement modifiables ;
+- tailles séparées pour titre, labels d'axes et graduations ;
+- limites X et Y automatiques ou manuelles ;
+- conservation optionnelle de la fenêtre d'analyse commune ;
+- grille activable/désactivable, majeure/mineure, style, épaisseur et opacité réglables ;
+- bordures haute/droite activables, épaisseur des axes réglable ;
+- direction, longueur et épaisseur des ticks réglables ;
+- couleurs du fond du graphique et de la figure modifiables ;
+- légende : texte, titre, taille, position et cadre paramétrables ;
+- dimensions d'export en cm ;
+- DPI d'export réglable jusqu'à 1200 ;
+- export PNG avec fond transparent optionnel ;
+- option de rognage au contenu ;
+- bouton « Appliquer la mise en forme » ;
+- bouton « Réinitialiser le style » ;
+- les réglages de courbes et de dégradés de la V28 sont conservés.
+
+Nouveautés v30 :
+- affichage du champ magnétique en mT dans toute l'interface ;
+- Visualiser : axe X et curseurs de fenêtre en mT ;
+- Multi-spectres : spectres, fenêtre d'analyse, tableau et détails en mT ;
+- Suivi cinétique : spectres, fenêtre d'analyse, tableau et détails en mT ;
+- Superposition et export PNG : axe X et limites manuelles en mT ;
+- exports TXT/Excel : fenêtres d'analyse reportées en mT ;
+- les calculs de double intégration restent réalisés en interne sur l'axe brut en gauss,
+  afin de conserver exactement les valeurs de double intégrale des versions précédentes.
+
+Nouveautés v31 :
+- nouvel onglet « Étalon interne Mn²⁺ » ;
+- chargement direct DTA + DSC ;
+- auto-détection du DSC associé au DTA ;
+- fenêtre dédiée au choix d'un pic Mn²⁺ isolé ;
+- fenêtre indépendante pour Mn²⁺ + radical ;
+- zones colorées sur le spectre pour visualiser les deux intégrations ;
+- zoom X totalement réglable en mT ;
+- hauteur Y réglable manuellement ;
+- option de hauteur Y automatique ;
+- bouton « Zoomer automatiquement sur le pic Mn » ;
+- double intégration séparée du pic Mn et de Mn + radical ;
+- calcul automatique :
+  DI radical = DI(Mn + radical) - DI(Mn)
+  rapport = [DI(Mn + radical) - DI(Mn)] / DI(Mn)
+- les calculs restent réalisés sur l'axe interne en gauss pour rester cohérents
+  avec les autres doubles intégrations du logiciel.
+
+Nouveautés v32 :
+- simplification complète de l'analyse « Étalon interne Mn²⁺ » ;
+- suppression des nombreux curseurs de fenêtre et de hauteur ;
+- suppression des zones de fond colorées ;
+- navigation directement avec les outils Matplotlib : zoom, déplacement, précédent/suivant ;
+- la hauteur Y peut être réglée librement avec la loupe ;
+- bouton « Ajuster Y à la vue » pour adapter automatiquement la hauteur au X affiché ;
+- Étape 1 : la vue X actuelle devient la fenêtre Mn et la double intégrale Mn est calculée immédiatement ;
+- Étape 2 : la vue X actuelle devient la fenêtre Mn + radical et la double intégrale totale est calculée immédiatement ;
+- Étape 3 : calcul automatique de DI radical et du rapport (Total - Mn) / Mn ;
+- les fenêtres retenues sont matérialisées uniquement par des traits verticaux discrets ;
+- boutons pour revenir rapidement à la fenêtre Mn, à la fenêtre totale ou au spectre complet ;
+- interface neutre sans fond coloré spécifique.
+
+Nouveautés v33 :
+- réglage direct des limites Mn²⁺ et Mn²⁺ + radical sur le graphe ;
+- activer « Régler Mn²⁺ » ou « Régler Mn²⁺ + radical » ;
+- attraper un trait vertical à la souris et le déplacer ;
+- mise à jour visuelle immédiate pendant le glissement ;
+- double intégration recalculée uniquement au relâchement de la souris ;
+- les outils zoom/pan Matplotlib restent disponibles ;
+- aucun fond coloré, uniquement traits bleus pour Mn et gris pour la fenêtre totale.
+
+Nouveautés v35 (base V33) :
+- ajout d'un mode « période Mn²⁺ verrouillable » ;
+- la période peut être définie à partir de la vue puis réglée pic-à-pic avec deux traits gris pointillés ;
+- affichage automatique de ΔB en mT ;
+- bouton « Verrouiller la période » : la largeur devient fixe ;
+- bouton « Centrer la fenêtre verrouillée sur la vue » ;
+- bouton « Déplacer la fenêtre verrouillée » : la fenêtre Mn entière se translate sans changer de largeur ;
+- lors du déplacement verrouillé, les deux bornes bougent ensemble ;
+- la double intégrale Mn est recalculée au relâchement de la souris ;
+- le réglage indépendant des bornes Mn reste disponible lorsque la période n'est pas verrouillée ;
+- la fenêtre Mn + radical reste indépendante.
+
+Nouveautés v36 :
+- analyse Mn²⁺ : correction de baseline visuelle optionnelle ;
+- baseline linéaire estimée par moyenne des extrémités du spectre ;
+- pourcentage de bord utilisé réglable ;
+- la double intégration conserve sa correction de baseline interne historique ;
+- affichage optionnel des points d'inflexion / changements de convexité ;
+- dérivée seconde calculée sur un signal lissé par Savitzky-Golay ;
+- lissage réglable pour limiter les faux changements de convexité dus au bruit ;
+- points d'inflexion affichés sous forme de traits violets discrets ;
+- positions des premières inflexions visibles indiquées en mT ;
+- période Mn verrouillable et déplacement de fenêtre de la V35 conservés.
+
+Nouveautés v38 :
+- retour à la correction de baseline visuelle de la V36 ;
+- suppression complète des points d'inflexion et du calcul de dérivée seconde ;
+- ajout d'une ligne horizontale y = 0 dans l'analyse Mn²⁺ ;
+- ligne y = 0 affichée par défaut et désactivable ;
+- la ligne y = 0 est uniquement un repère graphique et ne modifie aucun calcul ;
+- correction de baseline toujours réglable avec le pourcentage de bords utilisé ;
+- période Mn verrouillable et déplacement de fenêtre de la V35/V36 conservés.
+
+Nouveautés v39 :
+- bouton visible « Effacer tous les repères / Recommencer » dans l'analyse Mn²⁺ ;
+- efface les traits Mn, la fenêtre Mn + radical, la période pic-à-pic et son verrouillage ;
+- efface les doubles intégrales et le rapport calculé ;
+- revient automatiquement au spectre complet ;
+- quitte les modes zoom/pan Matplotlib si nécessaire et remet l'historique de navigation à zéro ;
+- conserve le DTA/DSC chargés ainsi que les options de correction de baseline et de ligne y = 0.
+
+Nouveautés v40 :
+- analyse Mn²⁺ : panneau « Double intégrale en temps réel » ;
+- la DI de la fenêtre active s'actualise pendant le déplacement des limites ;
+- le rapport (Total - Mn) / Mn est également affiché en temps réel dès que
+  les deux fenêtres sont définies ;
+- calcul temporisé environ toutes les 70 ms pour rester fluide ;
+- le calcul final est toujours refait au relâchement de la souris ;
+- fonctionne avec le réglage direct des bornes et la fenêtre Mn à période verrouillée ;
+- le bouton « Recommencer » remet aussi ce panneau à zéro.
+
+Nouveautés v41 :
+- simplification importante de l'analyse Mn²⁺ ;
+- suppression des boutons Spectre complet et Ajuster Y à la vue ;
+- suppression complète du bloc Réglage direct des limites ;
+- suppression complète des blocs Étape 1 — Pic Mn²⁺ et Étape 2 — Mn²⁺ + radical ;
+- la période Mn²⁺ verrouillable reste le moyen principal de définir/déplacer la fenêtre Mn ;
+- sélection Mn + radical simplifiée : bouton « Prendre la vue actuelle comme Mn²⁺ + radical » ;
+- Double intégrale en temps réel corrigée : elle correspond désormais à la zone X actuellement visible ;
+- la DI live se met à jour avec le zoom et le déplacement Matplotlib ;
+- DI Mn, DI total et rapport sont également affichés dans le même panneau ;
+- le déplacement de la fenêtre Mn verrouillée actualise maintenant correctement le panneau live ;
+- bouton renommé « Effacer les repères » ;
+- Effacer les repères conserve strictement le zoom X/Y en cours et ne réinitialise plus la navigation.
+
+Nouveautés v42 :
+- analyse Mn²⁺ : bouton « Voir spectre + intégrales » ;
+- nouvelle fenêtre pédagogique avec trois graphes synchronisés :
+  1) spectre dérivé brut + spectre corrigé de baseline,
+  2) première intégrale corrigée,
+  3) deuxième intégrale cumulative ;
+- la valeur finale de la troisième courbe correspond exactement à la double intégrale ;
+- choix de la source : vue actuelle, fenêtre Mn ou fenêtre Mn + radical ;
+- la fenêtre se met à jour automatiquement lorsque la zone X ou les fenêtres mémorisées changent ;
+- permet de visualiser directement comment le déplacement des bornes modifie
+  la première intégrale et la valeur finale de la double intégrale.
+
+Correctif v43 :
+- le bouton « Voir spectre + intégrales » est déplacé en haut du panneau Mn²⁺ ;
+- il est maintenant dans un bloc dédié « Visualisation de l'intégration » ;
+- il reste toujours visible sans avoir à descendre dans le panneau de droite ;
+- aucune modification des calculs.
+
+Nouveautés v44 :
+- analyse Mn²⁺ : intégration globale additive ;
+- baseline, première intégrale et seconde intégrale calculées une seule fois sur tout le spectre ;
+- les fenêtres lisent uniquement la différence de la seconde intégrale cumulative à leurs bornes ;
+- les intégrales de fenêtres adjacentes deviennent additives ;
+- axe Mn²⁺ converti en facteur g avec MWFQ du DSC ;
+- la dérive de fréquence micro-onde est prise en compte dans l'abscisse ;
+- DI temps réel et visualisation spectre + intégrales utilisent le même profil global.
+
+Nouveautés v45 :
+- Multi-spectres affiché et fenêtré en facteur g ;
+- chaque DSC utilise sa propre MWFQ pour convertir la fenêtre g vers le champ B au moment du calcul ;
+- Suivi cinétique affiché et fenêtré en facteur g ;
+- superpositions Multi et Suivi en g ;
+- étalon Mn²⁺ : chargement simultané de plusieurs DTA ;
+- association automatique des DSC de même nom ;
+- tableau de série avec DI Mn, DI totale, DI radical et rapport ;
+- sélection/double-clic d'un spectre pour l'analyser ;
+- navigation Précédent / Suivant directement dans la fenêtre d'analyse ;
+- bouton d'enregistrement des mesures ;
+- les mesures restent attachées au spectre et sont restaurées quand on y revient.
+
+Nouveautés v46 :
+- tableau Mn²⁺ simplifié : Spectre, DSC, Temps Δt, DI Mn, DI Total, DI Radical, Ratio ;
+- Temps Δt calculé automatiquement depuis DATE + TIME des DSC après tri chronologique ;
+- suppression complète du bloc Navigation dans la fenêtre d'analyse Mn²⁺ ;
+- bouton Effacer les repères conservé sans modifier le zoom courant ;
+- champs DI Mn et DI Total modifiables manuellement ;
+- bouton Appliquer au tableau Mn²⁺ : calcule DI Radical et Ratio puis met à jour la série ;
+- les DI calculées par les fenêtres remplissent automatiquement les champs manuels ;
+- sauvegarde/chargement d'un projet .mnseries.json contenant la série, les associations DTA/DSC, les mesures et les fenêtres ;
+- possibilité d'ajouter de nouveaux DTA à un projet existant ;
+- après le premier enregistrement, les modifications du projet sont sauvegardées automatiquement.
+
+Correctif v47 :
+- la colonne de temps Mn²⁺ est désormais « Temps depuis t0 (min) » ;
+- t0 = première acquisition chronologique valide lue dans DATE + TIME du DSC ;
+- tous les spectres suivants sont exprimés par rapport à ce même t0 ;
+- le temps n'est plus calculé par rapport au spectre précédent.
+Exemple vérifié :
+  17/09/2026 18:06:03 -> 0.000 min
+  18/09/2026 08:45:13 -> 879.167 min
+  18/09/2026 19:57:45 -> 1551.700 min
+
+Nouveautés v48 :
+- panneau droit de l'analyse Mn²⁺ entièrement défilable ;
+- barre de défilement verticale et molette de souris ;
+- utilisation complète possible sur un écran de petite taille ;
+- simplification du réglage Mn²⁺ :
+    1. Régler pic
+    2. Calculer DI Mn
+- suppression des boutons Prendre la vue comme période, Verrouiller,
+  Déverrouiller, Centrer et Déplacer la fenêtre verrouillée ;
+- la DI Mn est calculée directement entre les deux bornes réglées.
