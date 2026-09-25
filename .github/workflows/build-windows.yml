@@ -1,0 +1,48 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Recuperer les fichiers
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dependances
+        shell: cmd
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pyinstaller
+
+      - name: Compiler RPE Viewer
+        shell: cmd
+        run: |
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --name RPE_Viewer app.py
+
+      - name: Publier directement le EXE dans GitHub Releases
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "rpe-viewer-latest"
+
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag `
+              --title "RPE Viewer - dernière version" `
+              --notes "Exécutable Windows compilé automatiquement."
+          }
+
+          gh release upload $tag "dist/RPE_Viewer.exe" --clobber
